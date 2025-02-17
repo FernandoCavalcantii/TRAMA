@@ -14,6 +14,8 @@
 
 Este projeto visa desenvolver um sistema de gestão para a empresa Fábrica de Ideias, facilitando o cadastro e controle de colaboradores, parceiros e doadores. O sistema é focado na gestão de pessoas e na mensuração de impacto.
 
+- [Repositório original](https://github.com/rodsouzab/ProjetoManguetown)
+
 ## 💡 Equipe 
 
 ### 👨‍💻 Equipe de desenvolvimento 
