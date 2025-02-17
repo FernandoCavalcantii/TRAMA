@@ -1,0 +1,370 @@
+/* Estilo geral para o corpo da página */
+html, body {
+    height: 100%; /* Garantir que o body ocupe 100% da altura */
+    margin: 0; /* Remover margens padrão */
+}
+
+h1 {
+    color: #115a2f;
+}
+
+body {
+    display: flex; /* Usar Flexbox */
+    flex-direction: column; /* Colocar elementos em coluna */
+    font-family: Arial, sans-serif;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Estilo para o cabeçalho */
+header {
+    background-color: #c55b7e;
+    color: white;
+    padding: 1em 0;
+    text-align: center;
+}
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+   
+/* Estilo para a navegação */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo para o conteúdo principal */
+main {
+    flex: 1; /* Faz o main ocupar o espaço restante */
+    padding: 2em;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Estilo para o rodapé */
+footer {
+    background-color: #c55b7e;
+    color:#115a2f;
+    text-align: center;
+    padding: 1em 0;
+    width: 100%; /* Garantir que o rodapé ocupe a largura total */
+}
+
+/* Estilo para links */
+a {
+    color: #333;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo dos botões */
+.button {
+            background-color: #c55b7e; /* Cor de fundo dos botões */
+            color: white; /* Cor do texto dos botões */
+            border: none; /* Remove bordas */
+            padding: 10px 20px; /* Espaçamento interno dos botões */
+            cursor: pointer; /* Muda o cursor para indicar que é clicável */
+            border-radius: 5px; /* Bordas arredondadas */
+            text-decoration: none; /* Remove sublinhado de links */
+        }
+
+        .button:hover {
+            background-color: #115a2f; /* Cor de fundo ao passar o mouse */
+        }
+
+        /* Botão de perigo (Excluir) */
+        .button.danger {
+            background-color: #c55b7e; /* Cor de fundo do botão de excluir */
+            color: white; /* Cor do texto do botão de excluir */
+        }
+
+        .button.danger:hover {
+            background-color: #b05368; /* Cor de fundo ao passar o mouse no botão de excluir */
+        }
+
+/* Estilo para o formulário */
+form {
+    background-color: white; /* Fundo branco para o formulário */
+    padding: 20px;
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    margin-top: 20px;
+}
+
+/* Estilo para os rótulos */
+label {
+    font-weight: bold; /* Rótulos em negrito */
+    display: block; /* Cada rótulo em linha separada */
+    margin: 10px 0 5px; /* Margens para espaçamento */
+}
+
+/* Estilo para os campos de entrada */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea {
+    width: 100%; /* Largura total */
+    padding: 10px; /* Espaçamento interno */
+    margin-bottom: 15px; /* Margem inferior */
+    border: 1px solid #ddd; /* Borda suave */
+    border-radius: 4px; /* Bordas arredondadas */
+    font-size: 14px; /* Tamanho da fonte */
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+textarea:focus {
+    border-color: #007BFF; /* Cor da borda ao focar */
+    outline: none; /* Remove a borda padrão */
+}
+
+/* Estilizando os botões do formulário */
+button[type="submit"] {
+    background-color: #c55b7e; /* Cor de fundo dos botões */
+    color: white; /* Cor do texto dos botões */
+    border: none; /* Remove bordas */
+    padding: 10px 20px; /* Espaçamento interno dos botões */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    border-radius: 5px; /* Bordas arredondadas */
+    text-decoration: none; /* Remove sublinhado de links */
+}
+
+button[type="submit"]:hover {
+    background-color: #115a2f; /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilizando a tabela */
+table {
+    margin-top: 20px;
+    width: 100%; /* Faz a tabela ocupar toda a largura */
+    border-collapse: collapse; /* Remove espaços entre as células */
+    background-color: #c55b7e; /* Cor de fundo da tabela */
+    color: white; /* Cor do texto da tabela */
+}
+
+table thead {
+    background-color: #115a2f; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+}
+
+table th, table td {
+    padding: 12px; /* Espaçamento interno das células */
+    text-align: left; /* Alinhamento do texto à esquerda */
+    border-bottom: 1px solid #ddd; /* Borda inferior das células */
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #e4b3c4; /* Linhas pares com fundo cinza claro */
+}
+
+table tbody tr:hover {
+    background-color: #e9ecef; /* Efeito hover cinza claro */
+}
+
+table th {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+table td {
+    color: #343a40; /* Texto em cinza escuro */
+}
+
+.alert {
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Estilo para o botão de cancelar - Bege Suave */
+.cancel-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 10px;
+    color: #333; /* Cor escura para contraste */
+    background-color: #f0e68c; /* Bege claro */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cancel-button:hover {
+    background-color: #ddd46a; /* Tom mais escuro de bege */
+    transform: scale(1.05);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Alinha os botões à direita */
+    gap: 10px; /* Espaçamento entre os botões */
+    margin-top: 20px; /* Margem superior para espaçamento do formulário */
+}
+
+#financiador-message {
+    display: none; /* Inicialmente escondido */
+    color: red;
+    margin-top: 0.5em; /* 1.5em para espaçamento superior */
+    font-size: 13px;
+}
+
+/* Estilos para o dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown-text {
+    color: #007bff; /* Cor do texto de "Escolha ação" */
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-menu .dropdown-item {
+    padding: 8px 12px;
+    color: black;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-menu .danger {
+    color: red;
+}
+
+/* Estilo para o botão de login */
+.login-button {
+    display: block; /* Faz o botão ser um bloco, permitindo centralização */
+    margin: 20px auto; /* Espaço acima e abaixo do botão e centraliza horizontalmente */
+    width: fit-content; /* Ajusta a largura do botão ao conteúdo */
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column; /* Coloca os elementos em coluna */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente se necessário */
+
+}
+
+.login-form {
+    background-color: #e4b3c4; /* Cor de fundo do formulário */
+    padding: 20px; /* Espaçamento interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: 300px; /* Largura fixa para o formulário */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column; /* Coloca os elementos em coluna */
+    align-items: center; /* Centraliza os itens */
+    margin-bottom: 15px; /* Margem inferior para espaçamento */
+}
+
+
+
+input.form-control {
+    width: 100%; /* Largura total para os campos de entrada */
+    padding: 10px; /* Espaçamento interno */
+    border: 1px solid #ddd; /* Borda suave */
+    border-radius: 4px; /* Bordas arredondadas */
+}
+
+.login-title {
+    margin-bottom: 20px; /* Adiciona espaço abaixo do título */
+}
+
+/* Estilo para os botões do dashboard */
+.dashboard-buttons {
+    display: flex; /* Usar flexbox para alinhar os botões horizontalmente */
+    justify-content: space-around; /* Espaçar os botões uniformemente */
+    margin-top: 20px; /* Espaço acima dos botões */
+}
+
+.dashboard-button {
+    display: inline-block; /* Garante que os botões se comportem como blocos */
+    padding: 15px 30px; /* Aumenta o padding para deixar os botões maiores */
+    font-size: 1.2em; /* Aumenta o tamanho da fonte */
+    color: white; /* Cor do texto */
+    background-color: #115a2f; /* Cor de fundo dos botões */
+    border: none; /* Remove bordas padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s; /* Transição suave para hover */
+    flex: 1; /* Faz os botões ocuparem o mesmo espaço */
+    margin: 0 10px; /* Espaçamento horizontal entre os botões */
+    text-align: center; /* Centraliza o texto */
+}
+
+.dashboard-button:hover {
+    background-color: #2e8e16; /* Cor de fundo ao passar o mouse */
+}
+
+.dashboard-button:focus {
+    outline: none; /* Remove a borda padrão do foco */
+    text-decoration: none; /* Garante que não tenha sublinhado ao focar */
+}
+
+/* Estilo para os botões não ativos */
+.btn-outline-secondary {
+    color: white;
+    border-color: white;
+    background-color: #6c757d;
+}
+
+/* Quando o botão estiver ativo */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+
+
+

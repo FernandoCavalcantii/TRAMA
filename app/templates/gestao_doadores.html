@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+{% block title %} Gestão de Doadores {% endblock %} 
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="welcome-title text-center">Doadores</h1>
+
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="action-buttons mb-4 text-right">
+        <a href="{% url 'manguetown:cadastrar_doador' %}" class="btn btn-primary">Cadastrar novo Doador</a>
+        <a href="{% url 'manguetown:dashboard' %}" class="btn btn-secondary">Voltar para Painel Administrativo</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="corTabela">
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Data de Nascimento</th>
+                <th>Lugar onde Mora</th>
+                <th>Individual</th>
+                <th>Tipo do Doador</th>
+                <th>Data de Disponibilidade</th>
+                <th>Local de Captação</th>
+                <th>Condição do Resíduo</th>
+                <th>Tipo do Resíduo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doador in doadores %}
+            <tr>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.nome }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.cpf }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.data_nascimento }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.lugar_onde_mora }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.individual|yesno:"Sim,Não" }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.tipo_doador }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.data_disponibilidade|default:"N/A" }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.local_captacao|default:"N/A" }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.condicao_residuo|default:"N/A" }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ doador.tipo_residuo|default:"N/A" }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">
+                    <!-- Dropdown para ações -->
+                    <select class="form-select action-select custom-select" data-doador-id="{{ doador.id }}">
+                        <option value="">Escolha ação</option>
+                        <option value="editar">Editar</option>
+                        <option value="excluir">Excluir</option>
+                    </select>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" class="text-center">Nenhum doador cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.action-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const action = this.value;
+                const doadorId = this.getAttribute('data-doador-id'); // Obtém o ID do doador
+
+                if (action === 'excluir') {
+                    // Confirmação antes de excluir
+                    if (confirm("Tem certeza de que deseja excluir este doador?")) {
+                        // Cria e envia um formulário para excluir
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = "{% url 'manguetown:gestao_doadores' %}";
+                        form.style.display = 'none';
+
+                        // CSRF token
+                        const csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = 'csrfmiddlewaretoken';
+                        csrfToken.value = "{{ csrf_token }}";
+                        form.appendChild(csrfToken);
+
+                        // ID do doador
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'doador_id';
+                        input.value = doadorId;
+                        form.appendChild(input);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                } else if (action === 'editar') {
+                    if (doadorId) {
+                        window.location.href = "{% url 'manguetown:editar_doador' '0' %}".replace("0", doadorId);
+                    } else {
+                        alert("Selecione um doador válido para editar.");
+                    }
+                }
+
+                // Resetar o dropdown após uma ação
+                this.value = "";
+            });
+        });
+    });
+</script>
+
+{% endblock %}

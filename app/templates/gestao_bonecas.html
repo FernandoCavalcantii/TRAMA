@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+{% block title %}
+    Gestão de Bonecas
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="welcome-title text-center">Bonecas</h1>
+
+        {% if messages %}
+            <div class="alert alert-info">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="action-buttons mb-4 text-right">
+            <a href="{% url 'manguetown:cadastrar_boneca' %}" class="btn btn-primary">Cadastrar nova Boneca</a>
+            <a href="{% url 'manguetown:dashboard' %}" class="btn btn-secondary">Voltar para Painel Administrativo</a>
+        </div>
+
+        <table class="table table-striped">
+            <thead class="corTabela">
+                <tr>
+                    <th>Nome</th>
+                    <th>Nível de Dificuldade</th>
+                    <th class="text-end">Ações</th> <!-- Alinha as ações à direita -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for boneca in bonecas %}
+                    <tr>
+                        <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ boneca.nome }}</td>
+                        <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ boneca.nivel_dificuldade }}</td>
+                        <td class="text-end" style="background-color: #EBCEB555; color: black;border:1px solid black"> <!-- Adicionando a classe text-end para as células de ação -->
+                            <select class="form-select action-select custom-select" data-boneca-id="{{ boneca.id }}">
+                                <option value="">Escolha ação</option>
+                                <option value="editar">Editar</option>
+                                <option value="excluir">Excluir</option>
+                            </select>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">Nenhuma boneca cadastrada.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.action-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const action = this.value;
+                    const bonecaId = this.getAttribute('data-boneca-id'); // Obtém o ID da boneca
+
+                    if (action === 'excluir') {
+                        // Confirmação antes de excluir
+                        if (confirm("Tem certeza de que deseja excluir esta boneca?")) {
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = "{% url 'manguetown:gestao_bonecas' %}";
+                            form.style.display = 'none';
+
+                            // CSRF token
+                            const csrfToken = document.createElement('input');
+                            csrfToken.type = 'hidden';
+                            csrfToken.name = 'csrfmiddlewaretoken';
+                            csrfToken.value = "{{ csrf_token }}";
+                            form.appendChild(csrfToken);
+
+                            // ID da boneca
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'boneca_id'; // Certifique-se de que o nome é o correto conforme seu backend
+                            input.value = bonecaId;
+                            form.appendChild(input);
+
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    } else if (action === 'editar') {
+                        if (bonecaId) {
+                            const editUrl = "{% url 'manguetown:editar_boneca' '0' %}".replace("0", bonecaId);
+                            console.log("Redirecionando para:", editUrl); // Log para depuração
+                            window.location.href = editUrl;
+                        } else {
+                            alert("Selecione uma boneca válida para editar.");
+                        }
+                    }
+
+                    // Resetar o dropdown após uma ação
+                    this.value = "";
+                });
+            });
+        });
+    </script>
+{% endblock %}

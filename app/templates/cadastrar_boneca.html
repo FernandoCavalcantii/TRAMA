@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Cadastrar Boneca
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="h3 mb-4 text-gray-800 text-danger">Cadastrar Nova Boneca</h1>
+
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nome_boneca">Nome da Boneca:</label>
+                <input type="text" class="form-control" id="nome_boneca" name="nome_boneca" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="nivel_dificuldade">Nível de Dificuldade (1-5):</label>
+                <input type="number" class="form-control" id="nivel_dificuldade" name="nivel_dificuldade" min="1" max="5" required>
+            </div>
+    
+            <button type="submit" class="btn btn-primary">Cadastrar Boneca</button>
+        </form>
+
+        <a href="{% url 'manguetown:gestao_bonecas' %}" class="btn btn-secondary mt-3">Voltar para Gestão de Bonecas</a>
+    </div>
+{% endblock %}

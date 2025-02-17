@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+{% block title %}
+    Gestão de Colaboradores
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="welcome-title text-center">Colaboradores</h1>
+
+        {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="action-buttons mb-4 text-right">
+            <a href="{% url 'manguetown:cadastrar_colaborador' %}" class="btn btn-primary">Cadastrar novo Colaborador</a>
+            <a href="{% url 'manguetown:dashboard' %}" class="btn btn-secondary">Voltar para Painel Administrativo</a>
+        </div>
+
+        <table class="table table-striped">
+            <thead class="corTabela">
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Data de Nascimento</th>
+                    <th>Lugar onde Mora</th>
+                    <th>Renda</th>
+                    <th>Situações de Vulnerabilidade</th>
+                    <th>Quantos Filhos</th>
+                    <th>Moradores na Residência</th>
+                    <th>Habilidades</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for colaborador in colaboradores %}
+                <tr>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.nome }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.cpf }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.data_nascimento }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.lugar_onde_mora }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.renda }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.situacoes_de_vulnerabilidade }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.quantos_filhos }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.quantas_pessoas_moram_com_voce }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ colaborador.habilidades }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black"> 
+                        <!-- Dropdown para ações -->
+                        <select class="form-select action-select custom-select" data-colaborador-id="{{ colaborador.id }}">
+                            <option value="">Escolha ação</option>
+                            <option value="editar">Editar</option>
+                            <option value="excluir">Excluir</option>
+                        </select>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center">Nenhum colaborador cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.action-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const action = this.value;
+                    const colaboradorId = this.getAttribute('data-colaborador-id'); // Obtém o ID do colaborador
+
+                    if (action === 'excluir') {
+                        // Confirmação antes de excluir
+                        if (confirm("Tem certeza de que deseja excluir este colaborador?")) {
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = "{% url 'manguetown:gestao_colaboradores' %}";
+                            form.style.display = 'none';
+
+                            // CSRF token
+                            const csrfToken = document.createElement('input');
+                            csrfToken.type = 'hidden';
+                            csrfToken.name = 'csrfmiddlewaretoken';
+                            csrfToken.value = "{{ csrf_token }}";
+                            form.appendChild(csrfToken);
+
+                            // ID do colaborador
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'colaborador_id'; // Certifique-se de que o nome é o correto conforme seu backend
+                            input.value = colaboradorId;
+                            form.appendChild(input);
+
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    } else if (action === 'editar') {
+                        if (colaboradorId) {
+                            const editUrl = "{% url 'manguetown:editar_colaborador' '0' %}".replace("0", colaboradorId);
+                            console.log("Redirecionando para:", editUrl); // Log para depuração
+                            window.location.href = editUrl;
+                        } else {
+                            alert("Selecione um colaborador válido para editar.");
+                        }
+                    }
+
+                    // Resetar o dropdown após uma ação
+                    this.value = "";
+                });
+            });
+        });
+    </script>
+{% endblock %}

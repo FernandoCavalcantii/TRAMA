@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+{% block title %} Gestão de Empresas Parceiras {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="welcome-title text-center">Empresas</h1>
+
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="action-buttons mb-4 text-right">
+        <a href="{% url 'manguetown:cadastro_empresa' %}" class="btn btn-primary">Cadastrar nova Empresa</a>
+        <a href="{% url 'manguetown:dashboard' %}" class="btn btn-secondary">Voltar para Painel Administrativo</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="corTabela">
+            <tr>
+                <th>Nome do Responsável</th>
+                <th>Nome da Empresa</th>
+                <th>Local de Captação</th>
+                <th>Disponibilidade para Pegar o Resíduo</th>
+                <th>Porte de Fabricação</th>
+                <th>Tipo de Resíduo</th>
+                <th>Condição do Resíduo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empresa in empresas %}
+            <tr>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ empresa.nome_responsavel }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ empresa.nome_empresa }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ empresa.captacao_local }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ empresa.disponibilidade_residuo }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ empresa.porte_fabrico }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ empresa.tipo_residuo }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ empresa.condicao_residuo }}</td>
+                <td style="background-color: #EBCEB555; color: black;border:1px solid black">
+                    <!-- Dropdown para ações -->
+                    <select class="form-select action-select custom-select " data-empresa-id="{{ empresa.id }}">
+                        <option value="">Escolha ação</option>
+                        <option value="editar">Editar</option>
+                        <option value="excluir">Excluir</option>
+                    </select>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">Nenhuma empresa cadastrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.action-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const action = this.value;
+                const empresaId = this.getAttribute('data-empresa-id'); // Obtém o ID da empresa
+
+                if (action === 'excluir') {
+                    // Confirmação antes de excluir
+                    if (confirm("Tem certeza de que deseja excluir esta empresa?")) {
+                        // Cria e envia um formulário para excluir
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = "{% url 'manguetown:gestao_empresas' %}";
+                        form.style.display = 'none';
+
+                        // CSRF token
+                        const csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = 'csrfmiddlewaretoken';
+                        csrfToken.value = "{{ csrf_token }}";
+                        form.appendChild(csrfToken);
+
+                        // ID da empresa
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'empresa_id';
+                        input.value = empresaId;
+                        form.appendChild(input);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                } else if (action === 'editar') {
+                    if (empresaId) {
+                        window.location.href = "{% url 'manguetown:editar_empresa' '0' %}".replace("0", empresaId);
+                    } else {
+                        alert("Selecione uma empresa válida para editar.");
+                    }
+                }
+
+                // Resetar o dropdown após uma ação
+                this.value = "";
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    {% load static %}  
+    <link rel="icon" href="{% static 'trama.ico' %}" type="image/x-icon">
+    <style>
+        /* Coded with love by Mutiullah Samim */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: white !important;
+        }
+        .user_card {
+            height: 440px;
+            width: 360px;
+            margin-top: auto;
+            margin-bottom: auto;
+            background: #EBCEB555;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 5px;
+            text-align: center; 
+        }
+        .brand_logo_container {
+            position: absolute;
+            height: 170px;
+            width: 170px;
+            top: -75px;
+            border-radius: 100%;
+            background: #D98BA755;
+            padding: 14px;
+            text-align: center;
+            opacity: 1 !important;
+        }
+        .brand_logo {
+            height: calc(100% + 28px); /* Subtraia a espessura da borda */
+            width: calc(100% + 28px);
+            border-radius: 50%;
+            border: 8px solid white;
+            margin-top: -14px; /* Ajusta o alinhamento vertical */
+            margin-left: -14px; /* Ajusta o alinhamento horizontal */
+            object-fit: contain; /* Ajusta a imagem dentro do círculo */
+            opacity: 1 !important;
+        }
+        .form_container {
+            margin-top: 15px;
+        }
+        .login-title {
+            color: black; 
+            font-size: 1.8rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            
+        }
+        .login_btn {
+            width: 100%;
+            background: #D98BA755; !important;
+            color: black !important;
+        }
+        .login_btn:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+            
+        }
+        .login_container {
+            padding: 0 3rem;
+        }
+        .input-group-text {
+            color: black !important;
+            border: 0 !important;
+            border-radius: 0.25rem 0 0 0.25rem !important;
+            background-color:#D98BA755 !important;
+        }
+        .input_user, .input_pass, .input_pass:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+            background-color:#D98BA755 !important;
+        }
+        .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+            background-color: #D98BA755 !important;
+        }
+        .message-container {
+            text-align: center;
+            color: red; /* Vermelho claro */
+            font-size: 1rem;
+            margin-top: 15px;
+        }
+        .messages {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            width: 80%; /* Ajuste opcional para largura */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="user_card">
+                <div class="d-flex justify-content-center">
+                    <div class="brand_logo_container">
+                        {% load static %}
+                        <img src="{% static 'trama-logo.png' %}" class="brand_logo" alt="Logo">
+                    </div>
+                </div><br>
+                <h2 class="login-title">Login</h2>
+                <div class="d-flex justify-content-center form_container">
+                    <form method="POST" class="login-form">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" id="username" name="username" required class="form-control input_user" placeholder="Usuário">
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" id="password" name="password" required class="form-control input_pass" placeholder="Senha">
+                        </div>
+                        <div class="d-flex justify-content-center mt-3 login_container">
+                            <button type="submit" class="btn login_btn">Entrar</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Mensagens logo abaixo da caixa de login -->
+                {% if messages %}
+                    <div class="message-container">
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li class="message">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

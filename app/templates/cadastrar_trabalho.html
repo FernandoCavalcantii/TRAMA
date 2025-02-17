@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Cadastrar Trabalho
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="h3 mb-4 text-gray-800 text-danger">Cadastrar Trabalho</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="colaborador_id">Colaboradoras:</label>
+                <select id="colaborador_id" name="colaborador_id" class="form-control select2" multiple="multiple" required>
+                    <option value="" disabled>Escolha uma ou mais colaboradoras</option>
+                    {% for colaborador in colaboradores %}
+                        <option value="{{ colaborador.id }}">{{ colaborador.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="boneca_id">Boneca:</label>
+                <select id="boneca_id" name="boneca_id" class="form-control" required>
+                    <option value="" selected disabled>Escolha uma Boneca</option>
+                    {% for boneca in bonecas %}
+                        <option value="{{ boneca.id }}">{{ boneca.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade:</label>
+                <input type="number" class="form-control" id="quantidade" name="quantidade" min="1" required />
+            </div>
+
+            <div class="form-group">
+                <label for="data_previsao">Data de Previsão:</label>
+                <input type="date" class="form-control" id="data_previsao" name="data_previsao" min="{{ today }}" required />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Cadastrar Trabalho</button>
+                <a href="{% url 'manguetown:gestao_trabalho' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Inicializa o Select2 após a página ser carregada
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#colaborador_id').select2({
+                placeholder: "Escolha uma ou mais colaboradoras",
+                allowClear: true,
+                width: '100%' // Ajuste de largura para melhor adaptação
+            });
+        });
+    </script>
+{% endblock %}

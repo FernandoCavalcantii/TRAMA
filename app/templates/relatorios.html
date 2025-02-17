@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Relatórios
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <h1 class="welcome-title text-center mb-5">Gráficos de Desempenho</h1>
+
+        <!-- Gráfico de Bonecas por Colaborador -->
+        <div class="row mb-4">
+            <div class="col-lg-12 col-md-12 mb-4">
+                <div class="card shadow-lg">
+                    <div class="card-header text-center bg-white text-white">
+                        <!-- Botão para mostrar/ocultar gráfico de bonecas -->
+                        <button class="btn btn-light w-100" onclick="toggleGraph('graficoBonecas')">
+                            Quantidade de Bonecas por Colaborador
+                        </button>
+                    </div>
+                    <div class="card-body graph-container" id="graficoBonecasContainer">
+                        <canvas id="graficoBonecas" class="d-none"></canvas> <!-- Inicialmente escondido -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico de Desempenho por Colaborador e Cálculo de Pontos -->
+        <div class="row mb-4">
+            <div class="col-lg-12 col-md-12 mb-4">
+                <div class="card shadow-lg">
+                    <div class="card-header text-center bg-white text-white">
+                        <!-- Botão para mostrar/ocultar gráfico de desempenho e cálculo de pontos -->
+                        <button class="btn btn-light w-100" onclick="toggleGraph('graficoDesempenho')">
+                            Desempenho por Pontos
+                        </button>
+                    </div>
+                    <div class="card-body graph-container" id="graficoDesempenhoContainer">
+                        <canvas id="graficoDesempenho" class="d-none"></canvas> <!-- Inicialmente escondido -->
+                        <h5 style="color: black"><strong>Cálculo de Pontos:</strong></h5>
+                                <p style="color: black">
+                                    Os pontos de cada colaboradora é calculado com base na quantidade de bonecas feitas por ela multiplicado pelas suas respectivas dificuldades.
+                                </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <!-- Inclusão do script do Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Função para alternar a visibilidade do gráfico
+        function toggleGraph(graphId) {
+            var graph = document.getElementById(graphId);
+            var container = document.getElementById(graphId + 'Container');
+
+            if (graph.classList.contains('d-none')) {
+                graph.classList.remove('d-none');
+                container.style.display = 'block';
+            } else {
+                graph.classList.add('d-none');
+                container.style.display = 'none';
+            }
+        }
+
+        // Gráfico de Bonecas
+        var ctx1 = document.getElementById('graficoBonecas').getContext('2d');
+        var graficoBonecas = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for item in dados_bonecas %}
+                        "{{ item.nome }}"{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Quantidade de Bonecas',
+                    data: [
+                        {% for item in dados_bonecas %}
+                            {{ item.quantidade_bonecas }}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ],
+                    backgroundColor: 'rgb(17, 90, 47, 0.55)',
+                    borderColor: 'rgb(17, 90, 47, 0.55)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    },
+                    x: {
+                        ticks: {
+                            // Modifica a cor das labels no eixo X (nomes das pessoas)
+                            color: 'black' // Altere para 'black' ou qualquer outra cor desejada
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Desempenho
+        var ctx2 = document.getElementById('graficoDesempenho').getContext('2d');
+        var graficoDesempenho = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for item in dados_desempenho %}
+                        "{{ item.nome }}"{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Pontos por Desempenho',
+                    data: [
+                        {% for item in dados_desempenho %}
+                            {{ item.pontos }}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ],
+                    backgroundColor: 'rgb(17, 90, 47, 0.55)',
+                    borderColor: 'rgb(17, 90, 47, 0.55)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    },
+                    x: {
+                        ticks: {
+                            // Modifica a cor das labels no eixo X (nomes das pessoas)
+                            color: 'black' // Altere para 'black' ou qualquer outra cor desejada
+                        }
+                    }
+                    
+                }
+            }
+        });
+    </script>
+
+    <!-- Estilo Customizado -->
+    <style>
+        /* Personalização do container do gráfico */
+        .graph-container {
+            display: none; /* Inicialmente oculto */
+            background-color: rgba(17, 90, 47, 0.333);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        /* Estilos de carta */
+        .card {
+            border-radius: 10px;
+            
+        }
+
+        .card-header {
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* Efeitos de transição */
+        .graph-container {
+            transition: opacity 0.3s ease;
+            
+        }
+
+        .graph-container.d-none {
+            opacity: 0;
+        }
+
+        .graph-container.show {
+            opacity: 1;
+        }
+    </style>
+
+{% endblock %}

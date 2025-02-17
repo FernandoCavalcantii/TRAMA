@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    {% load static %}  
+    <link rel="icon" href="{% static 'trama.ico' %}" type="image/x-icon">
+    <!-- Custom fonts for this template-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        #accordionSidebar {
+            background-color: #D98BA755 !important;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        #content-wrapper {
+            background-color: white !important;
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar .nav-link {
+            color: #000000 !important;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #a34759 !important;
+        }
+
+        .topbar {
+            background-color: white !important; /* Cor de fundo já definida */
+            box-shadow: none !important; /* Remove a sombra da topbar */
+            border-bottom: none !important; /* Remove a borda inferior */
+        }
+        /* Esconder a sidebar */
+        .sidebar.hidden {
+            width: 0 !important;      /* A sidebar ocupa 0 de largura */
+            visibility: hidden !important;  /* A sidebar fica invisível */
+            position: absolute; /* Remove a sidebar da sequência normal do layout */
+        }
+
+        /* Ajuste no conteúdo quando a sidebar está oculta */
+        .content-with-sidebar-hidden {
+            margin-left: 0 !important;  /* Remove a margem da sidebar */
+            width: 100% !important;     /* O conteúdo ocupa 100% da largura */
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Ajuste para o conteúdo quando a sidebar está visível */
+        #content-wrapper {
+            margin-left: 250px; /* Largura da sidebar visível */
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Estilo para o botão de hambúrguer */
+        .hamburger-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            color: #000000;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 9999; /* Garantir que o botão fique acima de outros elementos */
+        }
+        .custom-select {
+            background-color: #007bff; /* Cor de fundo, por exemplo, azul */
+            color: #ffffff; /* Cor do texto, por exemplo, branco */
+            border: 1px solid #0056b3; /* Cor da borda, um azul mais escuro */
+        }
+        
+        .custom-select option {
+            background-color: #ffffff; /* Cor de fundo das opções */
+            color: #000000; /* Cor do texto das opções */
+        }
+        
+        .form-select {
+            width: auto; /* Deixe o dropdown ajustar-se automaticamente ao conteúdo */
+            min-width: 150px; /* Defina uma largura mínima */
+        }
+        .text-center.mb-4 {
+            color: red; /* Substitua 'red' pela cor que desejar */
+        }
+        .custom-card {
+            background-color: #c55b7e; /* Cor de fundo desejada */
+            color: white; /* Define a cor do texto para que ele seja legível */
+        }
+        .welcome-title {
+            font-size: 2rem; /* Tamanho maior */
+            color: black; /* Cor que combina com os cards */
+            font-weight: bold; /* Negrito */
+            margin-bottom: 20px; /* Espaçamento inferior */
+        }
+
+        .welcome-title-lower {
+            font-size: 1.40rem; /* Tamanho maior */
+            color: black; /* Cor que combina com os cards */
+            font-weight: bold; /* Negrito */
+            margin-bottom: 20px; /* Espaçamento inferior */
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.25rem; /* Tamanho maior para o subtítulo */
+            color: black; /* Cor mais suave para o subtítulo */
+            margin-bottom: 30px; /* Espaçamento inferior */
+        }
+
+        .welcome-subtitle-lower {
+            font-size: 0.75rem; /* Tamanho maior para o subtítulo */
+            color: #6c757d; /* Cor mais suave para o subtítulo */
+            margin-bottom: 30px; /* Espaçamento inferior */
+        }
+        .corTabela{
+            background-color: #B0C8BA;
+            border:1px solid black;
+            border-collapse: separate;
+        }
+        .corTabela th, .corTabela thead {
+            color: black; 
+            border:1px solid black;
+            border-collapse: separate;
+        }
+
+        .corTabelaDashboard{
+            background-color: #c55b7e;
+            border:1px solid #f5a3b5
+        }
+        .corTabelaDashboard tr {
+            color: black; 
+        }
+
+
+        
+    
+    </style>
+
+    <!-- CSS do Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand (Logo escondido agora) -->
+            {% load static %}
+            <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                <div class="sidebar-brand-icon">
+                    <img src="{% static 'tramaaa.png' %}" alt="Logo" style="width: 70px; height: auto;">
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="/dashboard">
+                    <i class="fas fa-fw fa-tachometer-alt "style="color: #000000;"></i>
+                    <span>Painel</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Divider -->
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manguetown:gestao_trabalho' %}">
+                    <i class="fa-solid fa-gear" style="color: #000000;"></i>
+                    <span>Gestão de Trabalho</span>
+                </a>
+            </li>
+
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Gestão Links -->
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manguetown:gestao_colaboradores' %}">
+                    <i class="fas fa-users" style="color: #000000;"></i>
+                    <span>Gestão de Colaboradores</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manguetown:gestao_empresas' %}">
+                    <i class="fas fa-building" style="color: #000000;"></i>
+                    <span>Gestão de Parceiros</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manguetown:gestao_doadores' %}">
+                    <i class="fas fa-gift" style="color: #000000;"></i>
+                    <span>Gestão de Doadores</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manguetown:gestao_bonecas' %}">
+                    <i class="fas fa-star" style="color: #000000;"></i>
+                    <span>Gestão de Bonecas</span>
+                </a>
+            </li>
+            
+            <hr class="sidebar-divider d-none d-md-block">
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'manguetown:relatorios' %}">
+                    <i class="fa-solid fa-chart-line "style="color: #000000;"></i>
+                    <span>Relatórios</span>
+                </a>
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column content-with-sidebar-hidden" id="contentWrapper">
+
+            <!-- Botão Hamburguer Fora da Sidebar -->
+            <button class="hamburger-btn" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link" href="{% url 'manguetown:login' %}" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline  small" style="font-size: 1.25rem; color: black;">Sair</span>
+                                <i class="fas fa-sign-out-alt" style="font-size: 1.5rem; color: black;"></i> <!-- Ícone de logout -->
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Begin Page Content -->
+                {% block content %}
+                    <div class="container-fluid">
+                        <h1 class="h3 mb-4 text-gray-800 text-center">Bem-vindo(a)</h1>
+                        <p class="text-center">Escolha a gestão que deseja acessar.</p>
+
+                        <!-- Example of Select2 usage -->
+                        <select class="custom-select form-select" id="exampleSelect2">
+                            <option value="1">Colaboradores</option>
+                            <option value="2">Empresas</option>
+                            <option value="3">Doadores</option>
+                        </select>
+                    </div>
+                {% endblock %}
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Você tem certeza?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Selecione "Sair" abaixo se você está pronto para terminar sua sessão.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="{% url 'manguetown:login' %}">Sair</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript da página -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+    <script>
+        // Inicializando Select2
+        $(document).ready(function() {
+            $('#exampleSelect2').select2();
+        });
+
+        // Exemplo de script para alternar a visibilidade da sidebar
+        $("#sidebarToggle").click(function() {
+            $("#accordionSidebar").toggleClass("hidden");
+            $("#contentWrapper").toggleClass("content-with-sidebar-hidden");
+        });
+    </script>
+
+</body>
+
+</html>

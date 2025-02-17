@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+{% block title %} Editar Doador {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="text-center mb-4">Editar Doador</h2>
+
+    {% if messages %}
+        <div class="alert alert-info">
+            <ul class="mb-0">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="POST" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{{ doador.nome }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" class="form-control" id="cpf" name="cpf" value="{{ doador.cpf }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ doador.data_nascimento|date:'Y-m-d' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="lugar_onde_mora">Lugar onde mora:</label>
+            <input type="text" class="form-control" id="lugar_onde_mora" name="lugar_onde_mora" value="{{ doador.lugar_onde_mora }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="individual">Doador individual ou coletivo:</label>
+            <select class="form-control" id="individual" name="individual">
+                <option value="True" {% if doador.individual %}selected{% endif %}>Individual</option>
+                <option value="False" {% if not doador.individual %}selected{% endif %}>Coletivo</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo_doador">Tipo de Doador:</label>
+            <select class="form-control" id="tipo_doador" name="tipo_doador" required>
+                <option value="Financiador" {% if doador.tipo_doador == "Financiador" %}selected{% endif %}>Financiador</option>
+                <option value="Resíduo" {% if doador.tipo_doador == "Resíduo" %}selected{% endif %}>Resíduo</option>
+            </select>
+        </div>
+
+        <div id="financiador-message" class="alert alert-warning" style="display: {% if doador.tipo_doador == 'Financiador' %}block{% else %}none{% endif %};">
+            <strong>Atenção:</strong> Se "Financiador", campos abaixo desabilitados.
+        </div>
+
+        <div class="form-group">
+            <label for="data_disponibilidade">Data de Disponibilidade:</label>
+            <input type="date" class="form-control" id="data_disponibilidade" name="data_disponibilidade" value="{{ doador.data_disponibilidade|date:'Y-m-d' }}" {% if doador.tipo_doador == 'Financiador' %}disabled{% endif %}>
+        </div>
+
+        <div class="form-group">
+            <label for="local_captacao">Local de Captação:</label>
+            <input type="text" class="form-control" id="local_captacao" name="local_captacao" value="{{ doador.local_captacao }}" {% if doador.tipo_doador == 'Financiador' %}disabled{% endif %}>
+        </div>
+
+        <div class="form-group">
+            <label for="condicao_residuo">Condição do Resíduo:</label>
+            <input type="text" class="form-control" id="condicao_residuo" name="condicao_residuo" value="{{ doador.condicao_residuo }}" {% if doador.tipo_doador == 'Financiador' %}disabled{% endif %}>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo_residuo">Tipo de Resíduo:</label>
+            <input type="text" class="form-control" id="tipo_residuo" name="tipo_residuo" value="{{ doador.tipo_residuo }}" {% if doador.tipo_doador == 'Financiador' %}disabled{% endif %}>
+        </div>
+
+        <div class="form-actions text-right">
+            <a href="{% url 'manguetown:gestao_doadores' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Atualizar Doador</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function toggleFields() {
+    const tipoDoador = document.getElementById('tipo_doador').value;
+    const fieldsToDisable = [
+        'data_disponibilidade',
+        'local_captacao',
+        'condicao_residuo',
+        'tipo_residuo'
+    ];
+    const message = document.getElementById('financiador-message');
+    
+    if (tipoDoador === 'Financiador') {
+        fieldsToDisable.forEach(field => {
+            document.getElementById(field).disabled = true;
+            document.getElementById(field).value = ''; // Limpa os campos
+        });
+        message.style.display = 'block';
+    } else {
+        fieldsToDisable.forEach(field => {
+            document.getElementById(field).disabled = false;
+        });
+        message.style.display = 'none';
+    }
+}
+
+// Chama a função para definir os campos corretamente no carregamento
+document.addEventListener('DOMContentLoaded', function() {
+    toggleFields();
+    document.getElementById('tipo_doador').addEventListener('change', toggleFields);
+});
+</script>
+
+{% endblock %}

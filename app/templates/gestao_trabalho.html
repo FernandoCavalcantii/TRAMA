@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+{% block title %}
+    Gestão de Trabalho
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="welcome-title text-center">Trabalho</h1>
+
+        {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Botões de Status e Ação em linha -->
+        <div class="row mb-4">
+            <!-- Botões de Status à Esquerda -->
+            <div class="col">
+                <a href="?status=ativo" class="btn {% if filtro == 'ativo' %}btn-success{% else %}btn-outline-secondary{% endif %} d-inline-block">
+                    Ativos
+                </a>
+                <a href="?status=expirado" class="btn {% if filtro == 'expirado' %}btn-danger{% else %}btn-outline-secondary{% endif %} d-inline-block">
+                    Expirados
+                </a>
+                <a href="?status=concluido" class="btn {% if filtro == 'concluido' %}btn-primary{% else %}btn-outline-secondary{% endif %} d-inline-block">
+                    Concluídos
+                </a>
+            </div>
+
+            <!-- Botões de Ação à Direita -->
+            <div class="col text-right">
+                <a href="{% url 'manguetown:cadastrar_trabalho' %}" class="btn btn-primary">Cadastrar novo Trabalho</a>
+                <a href="{% url 'manguetown:dashboard' %}" class="btn btn-secondary">Voltar para Painel Administrativo</a>
+            </div>
+        </div>
+
+        <table class="table table-striped">
+            <thead class="corTabela">
+                <tr>
+                    <th>Nome do Colaborador</th>
+                    <th>Boneca</th>
+                    <th>Quantidade</th>
+                    <th>Data Prevista</th>
+                    {% if filtro == 'concluido' %}
+                        <th>Concluido em</th>
+                    {% endif %}
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for trabalho in trabalhos %}
+                <tr>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">
+                        {% for colaborador in trabalho.colaboradores.all %}
+                            <span>{{ colaborador.nome }}</span>{% if not forloop.last %}<br>{% endif %}
+                        {% empty %}
+                            Nenhum colaborador associado
+                        {% endfor %}
+                    </td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ trabalho.boneca.nome }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ trabalho.quantidade }}</td>
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ trabalho.data_previsao }}</td>
+                    {% if filtro == 'concluido' %}
+                        <td style="background-color: #EBCEB555; color: black;border:1px solid black">{{ trabalho.data_conclusao|date:"d/m/Y" }}</td>
+                    {% endif %}
+                    <td style="background-color: #EBCEB555; color: black;border:1px solid black">
+                        {% if trabalho.status == 'concluido' %}
+                            <select class="form-select action-select custom-select" data-trabalho-id="{{ trabalho.id }}">
+                                <option value="">Escolha ação</option>
+                                <option value="reverter">Reverter</option>
+                                <option value="excluir">Excluir</option>
+                            </select>
+                        {% else %}
+                            <select class="form-select action-select custom-select" data-trabalho-id="{{ trabalho.id }}">
+                                <option value="">Escolha ação</option>
+                                <option value="concluir">Concluir</option>
+                                <option value="editar">Editar</option>
+                                <option value="excluir">Excluir</option>
+                            </select>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center">Nenhum trabalho registrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.action-select').forEach(select => {
+                select.addEventListener('change', function () {
+                    const action = this.value;
+                    const trabalhoId = this.getAttribute('data-trabalho-id');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFiltro = urlParams.get('status'); // Captura o filtro 'ativo' ou 'expirado'
+    
+                    if (action === 'excluir') {
+                        if (confirm("Tem certeza de que deseja excluir este trabalho?")) {
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = "{% url 'manguetown:gestao_trabalho' %}?status=" + statusFiltro; // Adiciona o filtro à URL
+                            form.style.display = 'none';
+    
+                            const csrfToken = document.createElement('input');
+                            csrfToken.type = 'hidden';
+                            csrfToken.name = 'csrfmiddlewaretoken';
+                            csrfToken.value = "{{ csrf_token }}";
+                            form.appendChild(csrfToken);
+    
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'trabalho_id';
+                            input.value = trabalhoId;
+                            form.appendChild(input);
+    
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    } else if (action === 'editar') {
+                        if (trabalhoId) {
+                            const editUrl = "{% url 'manguetown:editar_trabalho' '0' %}".replace("0", trabalhoId);
+                            window.location.href = editUrl;
+                        } else {
+                            alert("Selecione um trabalho válido para editar.");
+                        }
+                    } else if (action === 'concluir') {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = "{% url 'manguetown:concluir_trabalho' 0 %}".replace("0", trabalhoId);
+                        form.style.display = 'none';
+    
+                        const csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = 'csrfmiddlewaretoken';
+                        csrfToken.value = "{{ csrf_token }}";
+                        form.appendChild(csrfToken);
+    
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'trabalho_id';
+                        input.value = trabalhoId;
+                        form.appendChild(input);
+    
+                        document.body.appendChild(form);
+                        form.submit();
+                    } else if (action === 'reverter') {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = "{% url 'manguetown:reverter_trabalho' 0 %}".replace("0", trabalhoId);
+                        form.style.display = 'none';
+    
+                        const csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = 'csrfmiddlewaretoken';
+                        csrfToken.value = "{{ csrf_token }}";
+                        form.appendChild(csrfToken);
+    
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'trabalho_id';
+                        input.value = trabalhoId;
+                        form.appendChild(input);
+    
+                        document.body.appendChild(form);
+                        form.submit();
+                        
+                    }
+                    this.value = ""; // Resetando a seleção do dropdown
+                });
+            });
+        });
+    </script>
+{% endblock %}

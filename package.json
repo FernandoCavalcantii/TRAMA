@@ -1,0 +1,19 @@
+{
+  "name": "projetomanguetown",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">\r <img src=\"https://github.com/user-attachments/assets/57420f76-8758-4f76-a092-35d09a90664d\" width=\"180px\"style=> \r </div>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.15.2"
+  },
+  "dependencies": {
+    "fullcalendar": "^6.1.15",
+    "tesseract.js": "^5.1.1"
+  }
+}

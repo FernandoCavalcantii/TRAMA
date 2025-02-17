@@ -1,0 +1,76 @@
+<!-- editar_colaborador.html -->
+{% extends 'base.html' %}
+
+{% block title %}
+    Editar Colaborador
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h2 class="text-center mb-4">Editar Colaborador: {{ colaborador.nome }}</h2>
+
+        {% if messages %}
+            <div class="alert alert-info">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="{{ colaborador.nome }}" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" class="form-control" name="cpf" id="cpf" maxlength="14" value="{{ colaborador.cpf }}" required placeholder="Ex: 000.000.000-00" />
+            </div>
+            
+            <div class="form-group">
+                <label for="data_nascimento">Data de Nascimento:</label>
+                <input type="date" class="form-control" name="data_nascimento" id="data_nascimento" value="{{ colaborador.data_nascimento|date:'Y-m-d' }}" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="lugar_onde_mora">Lugar onde mora:</label>
+                <input type="text" class="form-control" name="lugar_onde_mora" id="lugar_onde_mora" value="{{ colaborador.lugar_onde_mora }}" maxlength="255" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="renda">Renda:</label>
+                <input type="text" class="form-control" name="renda" value="{{ colaborador.renda|floatformat:2 }}" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="situacoes_de_vulnerabilidade">Situações de Vulnerabilidade:</label>
+                <textarea class="form-control" name="situacoes_de_vulnerabilidade" id="situacoes_de_vulnerabilidade" rows="4" placeholder="Descreva as situações...">{{ colaborador.situacoes_de_vulnerabilidade }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantos_filhos">Quantos Filhos:</label>
+                <input type="number" class="form-control" name="quantos_filhos" id="quantos_filhos" value="{{ colaborador.quantos_filhos }}" min="0" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="quantas_pessoas_moram_com_voce">Quantas Pessoas Moram com Você:</label>
+                <input type="number" class="form-control" name="quantas_pessoas_moram_com_voce" id="quantas_pessoas_moram_com_voce" value="{{ colaborador.quantas_pessoas_moram_com_voce }}" min="0" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="habilidades">Habilidades:</label>
+                <textarea class="form-control" name="habilidades" id="habilidades" rows="4" placeholder="Liste suas habilidades...">{{ colaborador.habilidades }}</textarea>
+            </div>
+            
+            <div class="form-actions text-right">
+                <a href="{% url 'manguetown:gestao_colaboradores' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </div>
+        </form>    
+    </div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro Empresa Parceira{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800 text-danger">Cadastro de Empresa Parceira</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nome_responsavel">Nome do Responsável:</label>
+            <input type="text" class="form-control" id="nome_responsavel" name="nome_responsavel" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="nome_empresa">Nome da Empresa:</label>
+            <input type="text" class="form-control" id="nome_empresa" name="nome_empresa" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="captacao_local">Local de Captação:</label>
+            <input type="text" class="form-control" id="captacao_local" name="captacao_local" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="disponibilidade_residuo">Disponibilidade para pegar o resíduo:</label>
+            <input type="text" class="form-control" id="disponibilidade_residuo" name="disponibilidade_residuo" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="porte_fabrico">Porte de Fabricação:</label>
+            <select class="form-control" id="porte_fabrico" name="porte_fabrico" required>
+                <option value="pequeno">Pequeno</option>
+                <option value="medio">Médio</option>
+                <option value="grande">Grande</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="tipo_residuo">Tipo de Resíduo:</label>
+            <input type="text" class="form-control" id="tipo_residuo" name="tipo_residuo" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="condicao_residuo">Condição do Resíduo:</label>
+            <textarea class="form-control" id="condicao_residuo" name="condicao_residuo" required></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{% url 'manguetown:gestao_empresas' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Cadastrar Empresa</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
